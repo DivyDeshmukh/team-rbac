@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
     authMiddleware
-} from "../../../lib/middlewares"
+} from "./lib/middlewares"
 
 const { authGuard } = authMiddleware;
 
@@ -28,11 +28,12 @@ const protectedRoutes: MiddlewareRule[] = [
     }
 ];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     const url = request.nextUrl.pathname;
 
     for (const route of protectedRoutes) {
         if (url.startsWith(route.path)) {
+            console.log("Middleware ran for: ", url);
             for (const handler of route.handlers) {
                 try {
                     const result = await handler(request);
