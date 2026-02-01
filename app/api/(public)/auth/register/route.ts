@@ -1,7 +1,7 @@
 import { authSchema } from "@/lib/schemas";
 import { authService } from "@/lib/services";
 import { asyncHandler } from "@/lib/utils/asyncHandler.utils";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 /*
 POST here is just a variable that references a function, not some special language keyword.
@@ -16,7 +16,7 @@ Unexpected errors
 const { registerSchema } = authSchema;
 const { registerUser } = authService;
 
-export const POST = asyncHandler(async (req: Request) => {
+export const POST = asyncHandler(async (req: NextRequest) => {
     const body =  await req.json();
 
     // validate

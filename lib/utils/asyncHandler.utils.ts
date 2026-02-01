@@ -1,14 +1,14 @@
 import { ApiError } from "next/dist/server/api-utils";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 type AsyncHandlerFunction = (
-    req: Request,
+    req: NextRequest,
     context?: any
 ) => Promise<NextResponse>
 
 export function asyncHandler(fn: AsyncHandlerFunction) {
-    return async (req: Request, context?: any) => {
+    return async (req: NextRequest, context?: any) => {
         try {
             return await fn(req, context);
         } catch (error) {

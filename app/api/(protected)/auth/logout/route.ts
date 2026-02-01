@@ -1,7 +1,7 @@
 import { asyncHandler } from "@/lib/utils/asyncHandler.utils";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export const POST = asyncHandler(async (req: Request) => {
+export const POST = asyncHandler(async (req: NextRequest) => {
     // Clear the token cookie by setting it to empty and expiring
     const response = NextResponse.json(
         {

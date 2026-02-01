@@ -1,12 +1,12 @@
 import { authSchema } from "@/lib/schemas";
 import { authService } from "@/lib/services";
 import { asyncHandler } from "@/lib/utils/asyncHandler.utils";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const { loginSchema } = authSchema;
 const { loginUser } = authService;
 
-export const POST = asyncHandler(async(req: Request) => {
+export const POST = asyncHandler(async(req: NextRequest) => {
     const body = await req.json();
 
     const parsed = loginSchema.parse(body);

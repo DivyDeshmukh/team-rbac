@@ -1,9 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { asyncHandler } from "./asyncHandler.utils";
 import { cookies } from "next/headers";
 import { prisma } from "../db/client";
-import { NextResponse } from "next/server";
 import { Role, User } from "../generated/prisma/client";
 
 const JWT_SECRET = process.env.JWT_SECRET!;

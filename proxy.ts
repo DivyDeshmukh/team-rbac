@@ -23,11 +23,12 @@ const protectedRoutes: MiddlewareRule[] = [
         handlers: [authGuard]
     },
     {
-        path: "/api/auth/users",
+        path: "/api/user",
         handlers: [authGuard]
     }
 ];
 
+// Request is the standard Web API for HTTP requests available in browsers and Node.js, while NextRequest is a Next.js-specific subclass of Request used in Middleware and App Router (route.ts). NextRequest extends Request by adding built-in convenience methods for easier access to cookies, IP addresses, and URL parsing (nextUrl). 
 export async function proxy(request: NextRequest) {
     const url = request.nextUrl.pathname;
 
