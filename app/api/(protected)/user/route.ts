@@ -11,7 +11,8 @@ export const GET = asyncHandler(async (req: NextRequest) => {
     // get and validate query params
     const query = req.nextUrl.searchParams;
 
-    const parsed = getUserSchema.parse(query);
+    // URLSearchParams is not a plain object — Zod doesn't know how to extract properties from it, so teamId and role will both be undefined after parsing, and the filter is never applied.
+    const parsed = getUserSchema.parse(Object.fromEntries(query));
 
     const { teamId, role } = parsed;
 

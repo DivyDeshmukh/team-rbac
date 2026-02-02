@@ -6,3 +6,10 @@ export const getUserSchema = z.object({
 });
 
 export type GetUserInput = z.infer<typeof getUserSchema>;
+
+export const updateUserTeamSchema = z.object({
+    teamId: z.string().nullable(),
+    userId: z.string()
+});
+
+export type UpdateUserTeamInput = z.infer<typeof updateUserTeamSchema>;

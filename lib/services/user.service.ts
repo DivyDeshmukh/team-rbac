@@ -1,7 +1,8 @@
-import { GetUserInput } from "../schemas/user.schema";
+import { GetUserInput, UpdateUserTeamInput } from "../schemas/user.schema";
 import { getCurrentUser } from "@/lib/utils/auth.utils";
 import { prisma } from "../db/client";
 import { Role } from "@/lib/generated/prisma/client";
+import { ApiError } from "next/dist/server/api-utils";
 
 export async function getUser(input: GetUserInput) {
   const { teamId: filterTeam, role: filterRole } = input;
@@ -87,4 +88,35 @@ export async function getUser(input: GetUserInput) {
   });
 
   return users;
-}
+};
+
+export async function updateUserTeam(input: UpdateUserTeamInput) {
+  const { teamId, userId } = input;
+
+  if (teamId) {
+    const team = await prisma.team.findUnique({
+      where: { id: teamId }
+    });
+
+    if (!team) {
+      throw new ApiError(404, "Team not found");
+    }
+  }
+
+  const updatedUser = await prisma.user.update({
+    where: {
+      id: userId
+    },
+    data: {
+      teamId: teamId ?? null
+    },
+    include: {
+      team: true
+    }
+  });
+
+  return {
+    ...updatedUser,
+    message: teamId ? "User assigned to team successfully" : "User removed from team successfully"
+  };
+};
