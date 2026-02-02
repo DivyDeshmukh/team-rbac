@@ -1,4 +1,8 @@
-import { GetUserInput, UpdateUserTeamInput } from "../schemas/user.schema";
+import {
+  GetUserInput,
+  UpdateUserRoleInput,
+  UpdateUserTeamInput,
+} from "../schemas/user.schema";
 import { getCurrentUser } from "@/lib/utils/auth.utils";
 import { prisma } from "../db/client";
 import { Role } from "@/lib/generated/prisma/client";
@@ -13,11 +17,7 @@ export async function getUser(input: GetUserInput) {
     throw new Error("Unauthorized");
   }
 
-  const {
-    id: userId,
-    role: requestRole,
-    teamId: requesterTeam,
-  } = currentUser;
+  const { id: userId, role: requestRole, teamId: requesterTeam } = currentUser;
 
   /*
             Build Prisma where object based on role rules:
@@ -52,15 +52,15 @@ export async function getUser(input: GetUserInput) {
   } else {
     // USER and GUEST
     if (requesterTeam) {
-        where = {
-            teamId: requesterTeam,     // only same team
-            role: { not: Role.ADMIN }, // do not include admin
-        };
+      where = {
+        teamId: requesterTeam, // only same team
+        role: { not: Role.ADMIN }, // do not include admin
+      };
     } else {
-        // no team → only self
-        where = {
-            id: userId,
-        };
+      // no team → only self
+      where = {
+        id: userId,
+      };
     }
   }
 
@@ -84,18 +84,19 @@ export async function getUser(input: GetUserInput) {
       teamId: true,
       createdAt: true,
       updatedAt: true,
-    },
+      team: true,
+    }
   });
 
   return users;
-};
+}
 
 export async function updateUserTeam(input: UpdateUserTeamInput) {
   const { teamId, userId } = input;
 
   if (teamId) {
     const team = await prisma.team.findUnique({
-      where: { id: teamId }
+      where: { id: teamId },
     });
 
     if (!team) {
@@ -103,20 +104,41 @@ export async function updateUserTeam(input: UpdateUserTeamInput) {
     }
   }
 
-  const updatedUser = await prisma.user.update({
+  const { password, ...updatedUser } = await prisma.user.update({
     where: {
-      id: userId
+      id: userId,
     },
     data: {
-      teamId: teamId ?? null
+      teamId: teamId ?? null,
     },
     include: {
-      team: true
-    }
+      team: true,
+    },
   });
 
   return {
     ...updatedUser,
-    message: teamId ? "User assigned to team successfully" : "User removed from team successfully"
+    message: teamId
+      ? "User assigned to team successfully"
+      : "User removed from team successfully",
   };
-};
+}
+
+export async function updateUserRole(input: UpdateUserRoleInput) {
+  const { role, userId } = input;
+
+  const { password, ...updatedUser } = await prisma.user.update({
+    where: { id: userId },
+    data: {
+      role,
+    },
+    include: {
+      team: true,
+    },
+  });
+
+  return {
+    ...updatedUser,
+    message: `User role updated to ${role} successfully.`,
+  };
+}

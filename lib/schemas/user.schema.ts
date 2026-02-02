@@ -1,4 +1,5 @@
 import z from "zod";
+import { Role } from "../generated/prisma/enums";
 
 export const getUserSchema = z.object({
     teamId: z.string().optional(),
@@ -13,3 +14,10 @@ export const updateUserTeamSchema = z.object({
 });
 
 export type UpdateUserTeamInput = z.infer<typeof updateUserTeamSchema>;
+
+export const updateUserRoleSchema = z.object({
+    role: z.enum([Role.USER, Role.MANAGER]),
+    userId: z.string()
+});
+
+export type UpdateUserRoleInput = z.infer<typeof updateUserRoleSchema>;
