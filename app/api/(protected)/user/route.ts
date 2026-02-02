@@ -1,6 +1,7 @@
 import { userSchema } from "@/lib/schemas";
 import { userService } from "@/lib/services";
 import { asyncHandler } from "@/lib/utils/asyncHandler.utils";
+import { getCurrentUser } from "@/lib/utils/auth.utils";
 import { NextRequest, NextResponse } from "next/server";
 
 const { getUserSchema } = userSchema;
@@ -16,7 +17,9 @@ export const GET = asyncHandler(async (req: NextRequest) => {
 
     const { teamId, role } = parsed;
 
-    const users = await getUser({ teamId, role });
+    const currentUser = await getCurrentUser(req);
+
+    const users = await getUser({ teamId, role }, currentUser!);
 
     return NextResponse.json(
         {

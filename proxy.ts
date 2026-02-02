@@ -58,6 +58,10 @@ export async function proxy(request: NextRequest) {
         }
     }
 
-    // If nothing matched, continue to the route handler
-    return NextResponse.next();
+    // If nothing matched, continue to the route handler but as we have modified headers and added x-user-id so we have to pass new request object
+    return NextResponse.next({
+        request: {
+            headers: request.headers
+        }
+    });
 }

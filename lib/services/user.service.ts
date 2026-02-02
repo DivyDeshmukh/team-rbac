@@ -3,19 +3,12 @@ import {
   UpdateUserRoleInput,
   UpdateUserTeamInput,
 } from "../schemas/user.schema";
-import { getCurrentUser } from "@/lib/utils/auth.utils";
 import { prisma } from "../db/client";
-import { Role } from "@/lib/generated/prisma/client";
+import { Role, User } from "@/lib/generated/prisma/client";
 import { ApiError } from "next/dist/server/api-utils";
 
-export async function getUser(input: GetUserInput) {
+export async function getUser(input: GetUserInput, currentUser: Omit<User, "password">) {
   const { teamId: filterTeam, role: filterRole } = input;
-
-  const currentUser = await getCurrentUser();
-
-  if (!currentUser) {
-    throw new Error("Unauthorized");
-  }
 
   const { id: userId, role: requestRole, teamId: requesterTeam } = currentUser;
 
@@ -64,18 +57,26 @@ export async function getUser(input: GetUserInput) {
     }
   }
 
-  // apply additional filters
+  // apply additional filters using AND to preserve role-based restrictions
+  const conditions: any[] = [];
+
+  if (Object.keys(where).length > 0) {
+    conditions.push(where);
+  }
+
   if (filterTeam) {
-    where.teamId = filterTeam;
+    conditions.push({ teamId: filterTeam });
   }
 
   if (filterRole) {
-    where.role = filterRole;
+    conditions.push({ role: filterRole });
   }
+
+  const finalWhere = conditions.length > 0 ? { AND: conditions } : {};
 
   // Now query with prisma
   const users = await prisma.user.findMany({
-    where,
+    where: finalWhere,
     select: {
       id: true,
       name: true,

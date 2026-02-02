@@ -16,18 +16,18 @@ export const PATCH = asyncHandler(
   ) => {
     const { userId } = await context.params;
 
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(req);
 
     const body = await req.json();
 
     const parsed = updateUserRoleSchema.parse({ userId, ...body });
 
     if (!user || !checkUserPermission(user, Role.ADMIN)) {
-      throw new ApiError(401, "You are not authorized to update team");
+      throw new ApiError(403, "You are not authorized to update team");
     }
 
     if (user.id === userId) {
-      throw new ApiError(401, "You cannot change your own role");
+      throw new ApiError(403, "You cannot change your own role");
     }
 
     const { message, ...updatedUser } = await updateUserRole(parsed);
@@ -38,7 +38,7 @@ export const PATCH = asyncHandler(
         user: updatedUser,
         message,
       },
-      { status: 201 },
+      { status: 200 },
     );
   },
 );

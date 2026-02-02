@@ -3,7 +3,7 @@ import { Role } from "../generated/prisma/enums";
 
 export const getUserSchema = z.object({
     teamId: z.string().optional(),
-    role: z.string().optional()
+    role: z.enum([Role.USER, Role.MANAGER]).optional()
 });
 
 export type GetUserInput = z.infer<typeof getUserSchema>;

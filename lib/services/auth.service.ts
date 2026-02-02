@@ -67,13 +67,13 @@ export async function loginUser(input: LoginInput) {
     });
 
     if (!existingUser) {
-        throw new ApiError(400, "User does not exists for this email address");
+        throw new ApiError(400, "Invalid Password or Email");
     }
 
     const isPasswordCorrect = await verifyPassword(input.password, existingUser.password);
 
     if (!isPasswordCorrect) {
-        throw new ApiError(400, "Password is Incorrect");
+        throw new ApiError(400, "Invalid Password or Email");
     }
 
     const token = generateJwtToken(existingUser.id);

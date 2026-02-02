@@ -1,8 +1,9 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { cookies } from "next/headers";
 import { prisma } from "../db/client";
 import { Role, User } from "../generated/prisma/client";
+import { NextRequest } from "next/server";
+import { ApiError } from "next/dist/server/api-utils";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
@@ -49,29 +50,31 @@ export const verifyJwtToken = (token: string): { userId: string } => {
 
 // Because jwt ops are fast, they are provided as synchronous functions — no need for async/await.
 
-export const getCurrentUser = async (): Promise<User | null> => {
+export const getCurrentUser = async (req: NextRequest): Promise<Omit<User, "password"> | null> => {
   // You don’t get req with cookies at the top level; you explicitly call cookies(). You don’t call middleware like cookieParser() — Next.js does cookie parsing for you. cookies() gives a store you query by name.
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value;
 
-  if (!token) return null;
+  const userId = req.headers.get("x-user-id");
 
-  const decoded = verifyJwtToken(token);
+  if (!userId) {
+    throw new ApiError(401, "Unauthorized");
+  }
 
   const user = await prisma.user.findUnique({
-    where: { id: decoded.userId },
+    where: { id: userId },
   });
 
-  if (!user) return null;
+  if (!user) {
+    throw new ApiError(401, "Unauthorized");
+  };
 
   // no need to send the password
   const { password, ...rest } = user;
 
-  return rest as User;
+  return rest as Omit<User, "password">;
 }
 
 export const checkUserPermission = (
-  user: User,
+  user: User | Omit<User, "password">,
   requiredRole: Role
 ): boolean => {
   const roleHierarchy = {
