@@ -1,6 +1,6 @@
 import { Role } from "@/lib/generated/prisma/enums";
 import { prisma } from "../lib/db/client";
-import { hashPassword } from "@/lib/utils/auth.utils";
+import { hashPassword } from "@/lib/server/utils/auth.utils";
 
 async function main() {
   console.log("Starting database seed...");

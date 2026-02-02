@@ -1,5 +1,5 @@
 import z from "zod";
-import { Role } from "../generated/prisma/enums";
+import { Role } from "../../server/generated/prisma/enums";
 
 export const getUserSchema = z.object({
     teamId: z.string().optional(),

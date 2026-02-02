@@ -2,9 +2,9 @@ import {
   GetUserInput,
   UpdateUserRoleInput,
   UpdateUserTeamInput,
-} from "../schemas/user.schema";
+} from "../../shared/schemas/user.schema";
 import { prisma } from "../db/client";
-import { Role, User } from "@/lib/generated/prisma/client";
+import { Role, User } from "@/lib/server/generated/prisma/client";
 import { ApiError } from "next/dist/server/api-utils";
 
 export async function getUser(input: GetUserInput, currentUser: Omit<User, "password">) {

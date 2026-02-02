@@ -1,4 +1,4 @@
-import { LoginInput, RegisterInput } from "../schemas/auth.schema";
+import { LoginInput, RegisterInput } from "../../shared/schemas/auth.schema";
 import { prisma } from "../db/client";
 import { ApiError } from "next/dist/server/api-utils";
 import { generateJwtToken, hashPassword, verifyPassword } from "../utils/auth.utils";

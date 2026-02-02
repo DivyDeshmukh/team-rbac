@@ -1,4 +1,4 @@
-import { asyncHandler } from "@/lib/utils/asyncHandler.utils";
+import { asyncHandler } from "@/lib/server/utils/asyncHandler.utils";
 import { prisma } from "../../../../lib/db/client"
 import { NextResponse } from "next/server";
 

@@ -1,7 +1,7 @@
-import { userSchema } from "@/lib/schemas";
-import { userService } from "@/lib/services";
-import { asyncHandler } from "@/lib/utils/asyncHandler.utils";
-import { getCurrentUser } from "@/lib/utils/auth.utils";
+import { userSchema } from "@/lib/shared/schemas";
+import { userService } from "@/lib/server/services";
+import { asyncHandler } from "@/lib/server/utils/asyncHandler.utils";
+import { getCurrentUser } from "@/lib/server/utils/auth.utils";
 import { NextRequest, NextResponse } from "next/server";
 
 const { getUserSchema } = userSchema;

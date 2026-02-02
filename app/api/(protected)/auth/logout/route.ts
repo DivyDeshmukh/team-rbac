@@ -1,4 +1,5 @@
-import { asyncHandler } from "@/lib/utils/asyncHandler.utils";
+
+import { asyncHandler } from "@/lib/server/utils/asyncHandler.utils";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = asyncHandler(async (req: NextRequest) => {

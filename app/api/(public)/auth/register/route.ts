@@ -1,6 +1,6 @@
-import { authSchema } from "@/lib/schemas";
-import { authService } from "@/lib/services";
-import { asyncHandler } from "@/lib/utils/asyncHandler.utils";
+import { authSchema } from "@/lib/shared/schemas";
+import { authService } from "@/lib/server/services";
+import { asyncHandler } from "@/lib/server/utils/asyncHandler.utils";
 import { NextRequest, NextResponse } from "next/server";
 
 /*

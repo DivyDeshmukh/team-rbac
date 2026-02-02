@@ -1,5 +1,5 @@
-import { asyncHandler } from "@/lib/utils/asyncHandler.utils";
-import { getCurrentUser } from "@/lib/utils/auth.utils";
+import { asyncHandler } from "@/lib/server/utils/asyncHandler.utils";
+import { getCurrentUser } from "@/lib/server/utils/auth.utils";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = asyncHandler(async (req: NextRequest) => {
