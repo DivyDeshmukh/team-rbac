@@ -2,6 +2,7 @@ import { userSchema } from "@/lib/shared/schemas";
 import { userService } from "@/lib/server/services";
 import { asyncHandler } from "@/lib/server/utils/asyncHandler.utils";
 import { getCurrentUser } from "@/lib/server/utils/auth.utils";
+import { ApiError } from "next/dist/server/api-utils";
 import { NextRequest, NextResponse } from "next/server";
 
 const { getUserSchema } = userSchema;
@@ -17,9 +18,13 @@ export const GET = asyncHandler(async (req: NextRequest) => {
 
     const { teamId, role } = parsed;
 
-    const currentUser = await getCurrentUser(req);
+    const currentUser = await getCurrentUser();
 
-    const users = await getUser({ teamId, role }, currentUser!);
+    if (!currentUser) {
+        throw new ApiError(401, "Unauthorized");
+    }
+
+    const users = await getUser({ teamId, role }, currentUser);
 
     return NextResponse.json(
         {

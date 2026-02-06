@@ -1,9 +1,8 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { prisma } from "../db/client";
-import { Role, User } from "../generated/prisma/client";
-import { NextRequest } from "next/server";
-import { ApiError } from "next/dist/server/api-utils";
+import { Role, User } from "@/lib/shared/types";
+import { cookies } from "next/headers";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
@@ -50,31 +49,49 @@ export const verifyJwtToken = (token: string): { userId: string } => {
 
 // Because jwt ops are fast, they are provided as synchronous functions — no need for async/await.
 
-export const getCurrentUser = async (req: NextRequest): Promise<Omit<User, "password"> | null> => {
-  // You don’t get req with cookies at the top level; you explicitly call cookies(). You don’t call middleware like cookieParser() — Next.js does cookie parsing for you. cookies() gives a store you query by name.
+export const getCurrentUser = async (): Promise<User | null> => {
+  // You don't get req with cookies at the top level; you explicitly call cookies(). You don't call middleware like cookieParser() — Next.js does cookie parsing for you. cookies() gives a store you query by name.
 
-  const userId = req.headers.get("x-user-id");
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
 
-  if (!userId) {
-    throw new ApiError(401, "Unauthorized");
+  if (!token) {
+    return null;
   }
+
+  // Decode the JWT to get userId
+  let userId: string;
+  try {
+    const decoded = verifyJwtToken(token);
+    userId = decoded.userId;
+  } catch {
+    return null;
+  }
+
+  console.log("UserId: ", userId);
 
   const user = await prisma.user.findUnique({
     where: { id: userId },
   });
 
   if (!user) {
-    throw new ApiError(401, "Unauthorized");
+    return null;
+  }
+
+  // Transform Prisma user to shared User type (excludes password)
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    teamId: user.teamId,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
   };
-
-  // no need to send the password
-  const { password, ...rest } = user;
-
-  return rest as Omit<User, "password">;
 }
 
 export const checkUserPermission = (
-  user: User | Omit<User, "password">,
+  user: User,
   requiredRole: Role
 ): boolean => {
   const roleHierarchy = {

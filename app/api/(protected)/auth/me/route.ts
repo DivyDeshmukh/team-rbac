@@ -1,9 +1,14 @@
 import { asyncHandler } from "@/lib/server/utils/asyncHandler.utils";
 import { getCurrentUser } from "@/lib/server/utils/auth.utils";
-import { NextRequest, NextResponse } from "next/server";
+import { ApiError } from "next/dist/server/api-utils";
+import { NextResponse } from "next/server";
 
-export const GET = asyncHandler(async (req: NextRequest) => {
-    const user = await getCurrentUser(req);
+export const GET = asyncHandler(async () => {
+    const user = await getCurrentUser();
+
+    if (!user) {
+        throw new ApiError(401, "Unauthorized");
+    }
 
     return NextResponse.json(
         {

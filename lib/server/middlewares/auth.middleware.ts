@@ -20,6 +20,8 @@ export async function authGuard(req: NextRequest) {
     try {
         const decoded = verifyJwtToken(token);
 
+        console.log("UserId in Middleware: ", decoded.userId);
+
         // attach user info for other guards
         req.headers.set("x-user-id", decoded.userId);
 

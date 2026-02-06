@@ -1,6 +1,7 @@
 "use client";
 
 import { User } from "@/lib/shared/types";
+import { useAuth } from "@/store/Provider/AuthProvider";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -10,6 +11,7 @@ interface HeaderProps {
 
 const Header = ({ user }: HeaderProps) => {
   const pathname = usePathname();
+  const { logout } = useAuth();
   const navigation = [
     { name: "Home", href: "/", show: true },
     { name: "Dashboard", href: "/dashboard", show: true },
@@ -39,17 +41,19 @@ const Header = ({ user }: HeaderProps) => {
             TeamAccess
           </Link>
           {/* Navigation */}
-          <nav className="flex items-center space-x-6">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={getNavItemClass(item.href)}
-              >
-                {item.name}
-              </Link>
-            ))}
-          </nav>
+          {user && (
+            <nav className="flex items-center space-x-6">
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={getNavItemClass(item.href)}
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </nav>
+          )}
 
           {/* User Info */}
           <div className="flex items-center space-x-4">
@@ -57,7 +61,7 @@ const Header = ({ user }: HeaderProps) => {
               <>
                 <span className="text-sm text-slate-300">Divy User</span>
                 <button
-                //   onClick={}
+                  onClick={logout}
                   className="px-3 py-2 bg-red-500 text-white text-sm rounded hover:bg-red-700 transition-colors"
                 >
                   Logout

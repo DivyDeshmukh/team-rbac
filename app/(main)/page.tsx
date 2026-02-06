@@ -1,9 +1,12 @@
+"use client"
+
+import { useAuth } from '@/store/Provider/AuthProvider';
 import Link from 'next/link';
-import React from 'react'
 
 const Home = () => {
 
-    const user = false;
+    const {  user } = useAuth();
+
   return (
     <div className='max-w-4xl mx-auto'>
         <h1 className='text-3xl font-bold mb-6 text-white'>

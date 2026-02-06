@@ -18,7 +18,7 @@ export const PATCH = asyncHandler(async (
 
     const { userId } = await context.params;
 
-    const user = await getCurrentUser(req);
+    const user = await getCurrentUser();
 
     if (!user || !checkUserPermission(user, Role.ADMIN)) {
         throw new ApiError(403, "You are not authorized to update team");

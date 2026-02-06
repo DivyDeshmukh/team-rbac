@@ -16,7 +16,7 @@ export const PATCH = asyncHandler(
   ) => {
     const { userId } = await context.params;
 
-    const user = await getCurrentUser(req);
+    const user = await getCurrentUser();
 
     const body = await req.json();
 

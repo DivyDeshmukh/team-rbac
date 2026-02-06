@@ -1,10 +1,6 @@
-// enum exists during runtime like object similar to what we have in constant.ts and we can access it by importing
-export enum Role {
-    ADMIN = "ADMIN",
-    MANAGER = "MANAGER",
-    USER = "USER",
-    GUEST = "GUEST"
-}
+// Import and re-export Role from Prisma as source of truth
+import { Role } from '@/lib/server/generated/prisma/enums';
+export { Role };
 
 // just for compile time type safety preferred over type as can be easily extended
 export interface User {
@@ -12,7 +8,7 @@ export interface User {
     name: string;
     email: string;
     role: Role;
-    teamId?: string;
+    teamId: string | null;
     team?: string;
     createdAt: Date;
     updatedAt: Date;
@@ -23,7 +19,7 @@ export interface Team {
     name: string;
     description?: string | null;
     code: string;
-    memebers: User[];
+    members: User[];
     createdAt: Date;
     updatedAt: Date;
 }

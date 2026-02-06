@@ -64,14 +64,14 @@ class ApiClient {
 
     // Admin Methods
     async updateUserRole(userId: string, role: string) {
-        return this.request(`/api/users/${userId}/role`, {
+        return this.request(`/api/user/${userId}/role`, {
             method: "PATCH",
             body: JSON.stringify({ role })
         });
     }
 
-    async updateUserTeam(userId: string, teamId: string) {
-        return this.request(`/api/users/${userId}/team`, {
+    async updateUserTeam(userId: string, teamId: string | null) {
+        return this.request(`/api/user/${userId}/team`, {
             method: "PATCH",
             body: JSON.stringify({ teamId })
         });
