@@ -6,7 +6,7 @@ export function transformUser(user: any): User {
     email: user.email,
     name: user.name,
     role: user.role,
-    team: user.team || undefined,
+    team: user.team?.name || undefined,
     teamId: user.teamId ?? null,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,

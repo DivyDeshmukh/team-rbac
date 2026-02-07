@@ -1,7 +1,8 @@
 import { checkUserPermission, getCurrentUser } from "@/lib/server/utils/auth.utils"
-import { Role } from "@/lib/shared/types";
+import { Role, User } from "@/lib/shared/types";
 import { redirect } from "next/navigation";
 import { prisma } from '../../../../lib/server/db/client';
+import UserDashboard from "@/components/dashboard/userDashboard";
 
 const UserPage = async () => {
     const user = await getCurrentUser();
@@ -26,7 +27,7 @@ const UserPage = async () => {
 
     return (
         <UserDashboard 
-            teamMembers={teamMembers}
+            teamMembers={teamMembers as User[]}
             currentUser={user}
         />
     );
