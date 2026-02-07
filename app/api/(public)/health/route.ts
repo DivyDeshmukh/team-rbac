@@ -1,5 +1,5 @@
 import { asyncHandler } from "@/lib/server/utils/asyncHandler.utils";
-import { prisma } from "../../../../lib/db/client"
+import { prisma } from "../../../../lib/server/db/client"
 import { NextResponse } from "next/server";
 
 export const GET = asyncHandler(async () => {

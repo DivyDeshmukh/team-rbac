@@ -1,5 +1,5 @@
 import { Role } from "@/lib/generated/prisma/enums";
-import { prisma } from "../lib/db/client";
+import { prisma } from "../lib/server/db/client";
 import { hashPassword } from "@/lib/server/utils/auth.utils";
 
 async function main() {
