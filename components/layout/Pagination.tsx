@@ -19,10 +19,11 @@ const Pagination = ({
   };
 
   return (
-    <div className="flex items-center justify-between px-4 py-3 
+    <div
+      className="flex items-center justify-between px-4 py-3 
                     bg-slate-900 border border-slate-700 
-                    rounded-xl shadow-md mt-4">
-
+                    rounded-xl shadow-md mt-4"
+    >
       {/* Previous Button */}
       <button
         onClick={() => goToPage(page - 1)}
@@ -36,11 +37,26 @@ const Pagination = ({
         Previous
       </button>
 
-      {/* Page Info */}
-      <span className="text-sm text-slate-300 font-medium">
-        Page <span className="text-blue-400">{page}</span> of{" "}
-        <span className="text-blue-400">{totalPages}</span>
-      </span>
+      {/* Page Select */}
+      <div className="flex items-center gap-2 text-sm text-slate-300">
+        <span className="text-sm text-blue-400 font-medium">Page</span>
+        <select
+          value={page}
+          onChange={(e) => goToPage(Number(e.target.value))}
+          className="bg-slate-800 border border-slate-700 rounded-lg px-2 py-1
+                     text-sm cursor-pointer
+                     hover:border-slate-500 transition-colors"
+        >
+          {Array.from({ length: totalPages }, (_, i) => (
+            <option value={i + 1} key={i + 1}>
+              {i + 1}
+            </option>
+          ))}
+        </select>
+        <span className="mx-2 text-blue-400">
+          of <span className="mx-2 text-white">{totalPages}</span>
+        </span>
+      </div>
 
       {/* Next Button */}
       <button
