@@ -1,11 +1,13 @@
-import { User } from "@/lib/shared/types";
+import { PaginationMeta, User } from "@/lib/shared/types";
+import Pagination from "../layout/Pagination";
 
 interface UserDashboardProps {
   teamMembers: User[];
   currentUser: User;
+  pagination: PaginationMeta
 }
 
-export default async function UserDashboard ({teamMembers, currentUser}: UserDashboardProps) {
+export default async function UserDashboard ({teamMembers, currentUser, pagination}: UserDashboardProps) {
 
     return (
         <div className="space-y-6">
@@ -38,6 +40,15 @@ export default async function UserDashboard ({teamMembers, currentUser}: UserDas
                             ))
                         }
                     </div>
+
+                    <Pagination 
+                        page={pagination.page}
+                        limit={pagination.limit}
+                        totalItems={pagination.totalItems}
+                        totalPages={pagination.totalPages}
+                        hasNextPage={pagination.hasNextPage}
+                        hasPrevPage={pagination.hasPrevPage}
+                    />
                 </div>
             </div>
         </div>

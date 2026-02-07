@@ -1,13 +1,15 @@
 import { getCurrentUser } from "@/lib/server/utils/auth.utils";
-import { User } from "@/lib/shared/types";
+import { PaginationMeta, User } from "@/lib/shared/types";
+import Pagination from "../layout/Pagination";
 
 interface ManagerDashboardProps {
-  myTeamMembers: User[];
-  allTeamMembers: User[];
-  currentUser: User;
+    myTeamMembers: User[];
+    allTeamMembers: User[];
+    currentUser: User;
+    pagination: PaginationMeta;
 }
 
-export default async function ManagerDashboard ({myTeamMembers, allTeamMembers, currentUser}: ManagerDashboardProps) {
+export default async function ManagerDashboard ({myTeamMembers, allTeamMembers, currentUser, pagination}: ManagerDashboardProps) {
 
     return (
         <div className="space-y-6">
@@ -21,7 +23,7 @@ export default async function ManagerDashboard ({myTeamMembers, allTeamMembers, 
                 <div className="bg-slate-800 border border-slate-700 rounded-lg">
                     <div className="p-4 border-b border-slate-700">
                         <h3 className="font-semibold text-white">
-                            Team Members ({allTeamMembers.length})
+                            Team Members ({pagination.totalItems})
                         </h3>
                     </div>
 
@@ -40,6 +42,15 @@ export default async function ManagerDashboard ({myTeamMembers, allTeamMembers, 
                             ))
                         }
                     </div>
+
+                    <Pagination 
+                        page={pagination.page}
+                        limit={pagination.limit}
+                        totalPages={pagination.totalPages}
+                        totalItems={pagination.totalItems}
+                        hasNextPage={pagination.hasNextPage}
+                        hasPrevPage={pagination.hasPrevPage}
+                    />
                 </div>
 
                 {/* My Team Members */}

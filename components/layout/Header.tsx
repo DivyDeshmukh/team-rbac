@@ -62,7 +62,7 @@ const Header = ({ user }: HeaderProps) => {
                 <span className="text-sm font-bold text-[#09DF72]">{user.name.charAt(0).toUpperCase()}{user.name.slice(1)} ({user.role})</span>
                 <button
                   onClick={logout}
-                  className="px-3 py-2 bg-red-500 text-white text-sm rounded hover:bg-red-700 transition-colors"
+                  className="px-3 py-2 bg-red-500 text-white text-sm rounded hover:bg-red-700 transition-colors cursor-pointer"
                 >
                   Logout
                 </button>
