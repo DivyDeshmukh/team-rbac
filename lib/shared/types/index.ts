@@ -30,3 +30,20 @@ export interface AuthContextType {
     logout: () => void;
     hasPermission: (requiredRole: Role) => boolean;
 }
+
+export interface PaginationMeta {
+    page: number;
+    limit: number;
+    totalItems: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+}
+
+export interface StatsMeta {
+    totalUsers: number;
+    admins: number;
+    users: number;
+    managers: number;
+    totalTeams: number;
+}

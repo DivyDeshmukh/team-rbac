@@ -1,16 +1,19 @@
 "use client";
 
 import { apiClient } from "@/lib/client/apiClient";
-import { Role, Team, User } from "@/lib/shared/types";
+import { PaginationMeta, Role, StatsMeta, Team, User } from "@/lib/shared/types";
 import { useTransition } from "react";
+import Pagination from "../layout/Pagination";
 
 interface AdminDashboardProps {
   users: User[];
   teams: Team[];
   currentUser: User;
+  pagination: PaginationMeta;
+  stats: StatsMeta
 }
 
-const AdminDashboard = ({ users, teams, currentUser }: AdminDashboardProps) => {
+const AdminDashboard = ({ users, teams, currentUser, pagination, stats }: AdminDashboardProps) => {
   const [isPending, startTransition] = useTransition();
 
   const handleTeamAssignment = async (
@@ -144,6 +147,15 @@ const AdminDashboard = ({ users, teams, currentUser }: AdminDashboardProps) => {
               </tbody>
             </table>
           </div>
+
+          <Pagination 
+            page={pagination.page}
+            limit={pagination.limit}
+            totalPages={pagination.totalPages}
+            totalItems={pagination.totalItems}
+            hasNextPage={pagination.hasNextPage}
+            hasPrevPage={pagination.hasPrevPage}
+          />
         </div>
 
         {/* Teams table */}
@@ -166,14 +178,10 @@ const AdminDashboard = ({ users, teams, currentUser }: AdminDashboardProps) => {
               </thead>
               <tbody>
                 {teams.map((team) => {
-                    const teamMembers = users.filter((user) => user.teamId === team.id);
-
-                    const teamManagers = users.filter(
-                        (user) => user.role === Role.MANAGER && user.teamId === team.id
-                    );
+                    const teamManagers = team.members.filter((m) => m.role === Role.MANAGER);
 
                     return (
-                        <tr className="border-b border-slate-700">
+                        <tr key={team.id} className="border-b border-slate-700">
                             <td className="py-2 text-slate-300 font-medium">
                                 {team.name}
                             </td>
@@ -183,16 +191,16 @@ const AdminDashboard = ({ users, teams, currentUser }: AdminDashboardProps) => {
                                 </span>
                             </td>
                             <td className="py-2 text-slate-300">
-                                {teamMembers.length} users
+                                {team.members.length} users
                             </td>
                             <td className="py-2 text-slate-300">
-                                {teamMembers.length > 0 
+                                {team.members.length > 0
                                     ? (
                                         <div className="flex flex-wrap">
                                             {teamManagers.map((manager) => (
                                                 <span
                                                     key={manager.id}
-                                                    className="bg-blue-500/20 text-blue-300 px-2 py-1 roundedtext-xs"
+                                                    className="bg-blue-500/20 text-blue-300 px-2 py-1 rounded text-xs"
                                                     title={manager.name}
                                                 >
                                                     {manager.name}
@@ -218,7 +226,7 @@ const AdminDashboard = ({ users, teams, currentUser }: AdminDashboardProps) => {
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <div className="bg-slate-800 border border-slate-700 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-white">
-                {users.length}
+                {stats.totalUsers}
             </div>
             <div className="text-sm text-slate">
                 Total Users
@@ -226,7 +234,7 @@ const AdminDashboard = ({ users, teams, currentUser }: AdminDashboardProps) => {
         </div>
         <div className="bg-slate-800 border border-slate-700 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-white">
-                {users.filter((user) => user.role === Role.ADMIN).length}
+                {stats.admins}
             </div>
             <div className="text-sm text-slate">
                 Admins
@@ -234,7 +242,7 @@ const AdminDashboard = ({ users, teams, currentUser }: AdminDashboardProps) => {
         </div>
         <div className="bg-slate-800 border border-slate-700 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-white">
-                {users.filter((user) => user.role === Role.MANAGER).length}
+                {stats.managers}
             </div>
             <div className="text-sm text-slate">
                 Total Managers
@@ -242,7 +250,7 @@ const AdminDashboard = ({ users, teams, currentUser }: AdminDashboardProps) => {
         </div>
         <div className="bg-slate-800 border border-slate-700 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-white">
-                {users.filter((user) => user.role !== Role.MANAGER).length}
+                {stats.users}
             </div>
             <div className="text-sm text-slate">
                 Users
@@ -250,7 +258,7 @@ const AdminDashboard = ({ users, teams, currentUser }: AdminDashboardProps) => {
         </div>
         <div className="bg-slate-800 border border-slate-700 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-white">
-                {teams.length}
+                {stats.totalTeams}
             </div>
             <div className="text-sm text-slate">
                 Teams
